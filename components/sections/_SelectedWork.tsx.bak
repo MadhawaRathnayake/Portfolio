@@ -1,0 +1,82 @@
+import Link from "next/link";
+import Reveal from "@/components/ui/Reveal";
+import Tag from "@/components/ui/Tag";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { featured } from "@/lib/projects";
+
+export default function SelectedWork() {
+  return (
+    <section className="px-6 py-24 md:px-12 md:py-32">
+      <div className="mx-auto max-w-[1200px]">
+        <SectionHeading
+          eyebrow="Selected work"
+          title="Three systems worth reading about"
+          actionHref="/projects"
+          actionLabel="All seven projects"
+        />
+
+        <div className="mt-16 flex flex-col gap-24 md:gap-32">
+          {featured.map((p, i) => (
+            <article
+              key={p.slug}
+              className="grid items-center gap-8 md:grid-cols-2 md:gap-16"
+            >
+              <Reveal
+                className={i % 2 === 1 ? "md:order-2" : undefined}
+                delay={0}
+              >
+                <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-line bg-sunken">
+                  <div className="flex h-full items-center justify-center font-mono text-xs text-faint">
+                    {p.slug}.png
+                  </div>
+                </div>
+              </Reveal>
+
+              <Reveal delay={0.08}>
+                <p className="font-mono text-sm text-accent">{p.index}</p>
+                <h3 className="mt-3 text-2xl tracking-tight md:text-3xl">
+                  {p.title}
+                </h3>
+                <p className="mt-4 max-w-[46ch] leading-relaxed text-muted">
+                  {p.blurb}
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {p.tags.map((t) => (
+                    <Tag key={t} label={t} />
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-center gap-6 text-sm">
+                  <Link
+                    href={`/projects/${p.slug}`}
+                    className="group inline-flex items-center gap-2 text-ink hover:text-accent"
+                  >
+                    <span className="link-underline">Read case study</span>
+                    <span className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
+                      &rarr;
+                    </span>
+                  </Link>
+                  {p.repo ? (
+                    <a
+                      href={p.repo}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="link-underline text-muted hover:text-ink"
+                    >
+                      Source
+                    </a>
+                  ) : (
+                    <span className="font-mono text-xs text-faint">
+                      Private repository
+                    </span>
+                  )}
+                </div>
+              </Reveal>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
