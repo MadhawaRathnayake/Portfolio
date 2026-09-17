@@ -35,3 +35,8 @@ Open http://localhost:3000
 - Colour, type and motion tokens: `app/globals.css` and `lib/motion.ts`
 - All project content: `lib/projects.ts`
 - Contact delivery: `app/api/contact/route.ts` (honeypot + 5 messages per hour per IP)
+
+## Deployment
+
+See `deploy/README.md`. Push to `main` builds an image, pushes it to GHCR and
+restarts the container on the Azure VM behind nginx.
