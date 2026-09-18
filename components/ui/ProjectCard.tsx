@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Tag from "./Tag";
 import type { Project } from "@/lib/projects";
@@ -18,10 +19,20 @@ export default function ProjectCard({ project }: { project: Project }) {
       transition={{ duration: DUR.base, ease: EASE }}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-raised transition-colors duration-200 hover:border-accent/40"
     >
-      <div className="aspect-[16/10] w-full overflow-hidden border-b border-line bg-sunken">
-        <div className="flex h-full items-center justify-center font-mono text-xs text-faint transition-transform duration-200 group-hover:scale-[1.03]">
-          {project.slug}.png
-        </div>
+      <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line bg-sunken">
+        {project.cover ? (
+          <Image
+            src={project.cover}
+            alt={`${project.title} screenshot`}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center font-mono text-xs text-faint">
+            {project.index}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-6">

@@ -17,7 +17,7 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl = "https://madhawa.dev";
+const siteUrl = "https://madhawa-portfolio.malaysiawest.cloudapp.azure.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

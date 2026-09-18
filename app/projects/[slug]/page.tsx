@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/ui/Reveal";
 import Tag from "@/components/ui/Tag";
@@ -93,10 +94,21 @@ export default async function CaseStudyPage({
       <div className="mt-16 px-6 md:px-12">
         <div className="mx-auto max-w-[1200px]">
           <Reveal>
-            <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-line bg-sunken">
-              <div className="flex h-full items-center justify-center font-mono text-xs text-faint">
-                {project.slug}-cover.png
-              </div>
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-line bg-sunken">
+              {project.cover ? (
+                <Image
+                  src={project.cover}
+                  alt={`${project.title} screenshot`}
+                  fill
+                  priority
+                  sizes="(min-width: 1200px) 1200px, 100vw"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center font-mono text-xs text-faint">
+                  {project.index}
+                </div>
+              )}
             </div>
           </Reveal>
         </div>

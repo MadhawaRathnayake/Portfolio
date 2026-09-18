@@ -5,6 +5,7 @@ export type Project = {
   index: string;
   title: string;
   blurb: string;
+  cover?: string;
   medium: string[];
   tags: string[];
   categories: string[];
@@ -23,6 +24,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "moh-survey-platform",
+    cover: "/projects/moh-survey-platform.png",
     index: "01",
     title: "MOH field survey platform",
     blurb:
@@ -80,6 +82,7 @@ export const projects: Project[] = [
   },
   {
     slug: "note-app-pipeline",
+    cover: "/projects/note-app-pipeline.png",
     index: "02",
     title: "Note Manager, and the pipeline under it",
     blurb:
@@ -138,6 +141,7 @@ export const projects: Project[] = [
   },
   {
     slug: "zk-voting",
+    cover: "/projects/zk-voting.png",
     index: "03",
     title: "ZK internet voting system",
     blurb:
@@ -195,6 +199,7 @@ export const projects: Project[] = [
   },
   {
     slug: "eventnet",
+    cover: "/projects/eventnet.jpeg",
     index: "04",
     title: "EventNet, microservices ticketing platform",
     blurb:
@@ -253,6 +258,7 @@ export const projects: Project[] = [
   },
   {
     slug: "inksolver",
+    cover: "/projects/inksolver.png",
     index: "05",
     title: "Inksolver, handwritten equation solver",
     blurb:
@@ -270,6 +276,7 @@ export const projects: Project[] = [
   },
   {
     slug: "hpc-preprocessing",
+    cover: "/projects/hpc-preprocessing.png",
     index: "06",
     title: "HPC data preprocessing desktop app",
     blurb:
