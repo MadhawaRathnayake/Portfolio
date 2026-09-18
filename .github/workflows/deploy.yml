@@ -7,7 +7,9 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # Must be lowercase: Docker rejects capitals in image names, and the
+  # GitHub repo is "MadhawaRathnayake/Portfolio".
+  IMAGE_NAME: madhawarathnayake/portfolio
 
 jobs:
   build:
@@ -74,8 +76,9 @@ jobs:
 
       - name: Verify the site is up
         run: |
+          # SITE_URL includes the scheme, e.g. http://20.30.40.50 or https://madhawa.dev
           for i in $(seq 1 12); do
-            code=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.SITE_DOMAIN }}/api/health || true)
+            code=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.SITE_URL }}/api/health || true)
             if [ "$code" = "200" ]; then echo "Healthy"; exit 0; fi
             echo "Attempt $i: got $code, retrying"; sleep 5
           done
