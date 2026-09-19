@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import { DUR, EASE } from "@/lib/motion";
 
@@ -16,16 +16,58 @@ const stats = [
 const headline = ["I build systems", "end to end, then", "ship and run them."];
 
 export default function Hero() {
-  const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
+  const [viewportH, setViewportH] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    let lastWidth = window.innerWidth;
+
+    const sync = () => {
+      lastWidth = window.innerWidth;
+      setIsDesktop(query.matches);
+      setViewportH(window.innerHeight);
+    };
+
+    sync();
+
+    // Only re-measure when the WIDTH changes. On mobile, the browser
+    // address bar collapsing and expanding fires resize with a new height
+    // on almost every scroll gesture; re-measuring there is what made the
+    // hero fade out and then snap back to visible.
+    const onResize = () => {
+      if (window.innerWidth === lastWidth) return;
+      sync();
+    };
+
+    window.addEventListener("resize", onResize);
+    query.addEventListener("change", sync);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      query.removeEventListener("change", sync);
+    };
+  }, []);
+
+  // Document scroll in pixels: no element measurement, so nothing to
+  // recalculate when the viewport height changes mid-scroll.
+  const { scrollY } = useScroll();
+
+  const fadeEnd = Math.max(1, viewportH * 0.55);
+  const driftEnd = Math.max(1, viewportH * 0.9);
+
+  const y = useTransform(scrollY, [0, driftEnd], [0, driftEnd * 0.16], {
+    clamp: true,
+  });
+  const opacity = useTransform(scrollY, [0, fadeEnd], [1, 0], { clamp: true });
+  const portraitY = useTransform(scrollY, [0, driftEnd], [0, driftEnd * -0.08], {
+    clamp: true,
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const portraitY = useTransform(scrollYProgress, [0, 1], ["0%", "-8%"]);
+  // The scroll-linked fade is a large-screen flourish only. On phones the
+  // hero is taller than the viewport, so fading the whole block hid content
+  // that was still on screen.
+  const parallax = isDesktop && !reduce && viewportH > 0;
 
   const rise = (delay: number) => ({
     initial: { opacity: 0, y: reduce ? 0 : 16 },
@@ -34,12 +76,9 @@ export default function Hero() {
   });
 
   return (
-    <section
-      ref={ref}
-      className="relative flex min-h-[92svh] items-center px-6 pt-24 md:px-12"
-    >
+    <section className="relative flex min-h-[92svh] items-center px-6 pt-24 md:px-12">
       <motion.div
-        style={reduce ? undefined : { y, opacity }}
+        style={parallax ? { y, opacity } : undefined}
         className="mx-auto w-full max-w-[1200px]"
       >
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
@@ -79,7 +118,7 @@ export default function Hero() {
 
           <motion.div
             className="relative order-first mx-auto w-full max-w-[280px] lg:order-none lg:max-w-none"
-            style={reduce ? undefined : { y: portraitY }}
+            style={parallax ? { y: portraitY } : undefined}
             initial={{ opacity: 0, scale: reduce ? 1 : 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: DUR.slow, ease: EASE, delay: reduce ? 0 : 0.12 }}
